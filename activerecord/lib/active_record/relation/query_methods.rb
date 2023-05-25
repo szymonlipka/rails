@@ -399,6 +399,16 @@ module ActiveRecord
       self
     end
 
+    def row_number(args = {})
+      spawn.row_number!(args)
+    end
+
+    def row_number!(args) # :nodoc:
+      args[:order] = preprocess_order_args([args[:order]]) unless args[:order].blank?
+      self.row_number_value = args || true
+      self
+    end
+
     # Add a Common Table Expression (CTE) that you can then reference within another SELECT statement.
     #
     # Note: CTE's are only supported in MySQL for versions 8.0 and above. You will not be able to
@@ -1571,6 +1581,11 @@ module ActiveRecord
         arel.take(build_cast_value("LIMIT", connection.sanitize_limit(limit_value))) if limit_value
         arel.skip(build_cast_value("OFFSET", offset_value.to_i)) if offset_value
         arel.group(*arel_columns(group_values.uniq)) unless group_values.empty?
+        if row_number_value == true
+          arel.row_number
+        elsif row_number_value.present?
+          arel.row_number(arel_columns(row_number_value[:partitions]), row_number_value[:order])
+        end
 
         build_order(arel)
         build_with(arel)

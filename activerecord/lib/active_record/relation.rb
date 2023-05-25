@@ -9,7 +9,7 @@ module ActiveRecord
                             :with]
 
     SINGLE_VALUE_METHODS = [:limit, :offset, :lock, :readonly, :reordering, :strict_loading,
-                            :reverse_order, :distinct, :create_with, :skip_query_cache]
+                            :reverse_order, :distinct, :create_with, :skip_query_cache, :row_number]
 
     CLAUSE_METHODS = [:where, :having, :from]
     INVALID_METHODS_FOR_DELETE_ALL = [:distinct, :with]

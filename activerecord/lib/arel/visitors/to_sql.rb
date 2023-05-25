@@ -226,6 +226,26 @@ module Arel # :nodoc: all
           visit_Arel_Nodes_Window o, collector
         end
 
+        def visit_Arel_Nodes_RowNumber(o, collector)
+          collector << "ROW_NUMBER() "
+          collector << "OVER ("
+
+          if o.partitions.present?
+            collect_nodes_for o.partitions, collector, "PARTITION BY "
+          end
+
+          unless o.orders.empty?
+            collector << " ORDER BY "
+            o.orders.each_with_index do |x, i|
+              collector << ", " unless i == 0
+              collector = visit(x, collector)
+            end
+          end
+          collector << ") "
+          collector << " AS "
+          collector << quote_column_name("row_number")
+        end
+
         def visit_Arel_Nodes_Window(o, collector)
           collector << "("
 

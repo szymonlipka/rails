@@ -127,6 +127,18 @@ module Arel # :nodoc: all
       window
     end
 
+    def row_number(partitions = {}, order = {})
+      row_number = Nodes::RowNumber.new
+      partitions.each do |partition|
+        row_number.partition(Nodes::UnqualifiedColumn.new(partition))
+      end
+
+      row_number.order(order)
+      @ctx.projections.concat [row_number]
+      self
+    end
+
+
     def project(*projections)
       # FIXME: converting these to SQLLiterals is probably not good, but
       # rails tests require it.

@@ -144,6 +144,15 @@ module Arel
       end
     end
 
+    describe "row_number" do
+      it "converts strings to SQLLiterals" do
+        table = Table.new :users
+        mgr = table.from
+        mgr.row_number({ users: :id }, { id: :asc })
+        _(mgr.to_sql).must_be_like %{ SELECT FROM "users" HAVING foo }
+      end
+    end
+
     describe "clone" do
       it "creates new cores" do
         table = Table.new :users, as: "foo"

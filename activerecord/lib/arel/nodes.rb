@@ -56,6 +56,9 @@ require "arel/nodes/named_function"
 # windows
 require "arel/nodes/window"
 
+# row number
+require "arel/nodes/row_number"
+
 # conditional expressions
 require "arel/nodes/case"
 
